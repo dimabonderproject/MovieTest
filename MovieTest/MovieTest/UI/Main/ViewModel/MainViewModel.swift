@@ -45,8 +45,7 @@ class MainViewModel {
         setDataSource()
     }
     
-    //MARK: - Methods
-    
+    //MARK: - Public Methods
     /// Selects a specific tab and triggers a completion block.
        /// - Parameters:
        ///   - segment: The SegementTab to be selected.
@@ -68,6 +67,25 @@ class MainViewModel {
         }
     }
     
+    func fetchNextPage(for tab: SegementTab, page: Int) {
+        movieService?.fetchNextPage(for: tab, page: page) { [weak self] result in
+            switch result {
+            case .success(let moviesResponse):
+                if !moviesResponse.results.isEmpty {
+                    self?.currentPage[tab] = page + 1
+                    self?.dataSoruceDict[tab]?.append(contentsOf: moviesResponse.results)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.uiEventsPublisher.send(.reloadData)
+                    }
+                } else {
+                    print("Next Page is Empty")
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
     func notifyNavigationBackToMainScreen() {
         uiEventsPublisher.send(.navigateBackFromDetailScreen)
     }
@@ -101,26 +119,6 @@ class MainViewModel {
     private func notifyMovieAlreadyExistsInFav() {
         uiEventsPublisher.send(.movieAddToFav(title: Constants.existInFavTitle))
     }
-    
-    func fetchNextPage(for tab: SegementTab, page: Int) {
-        movieService?.fetchNextPage(for: tab, page: page) { [weak self] result in
-            switch result {
-            case .success(let moviesResponse):
-                if !moviesResponse.results.isEmpty {
-                    self?.currentPage[tab] = page + 1
-                    self?.dataSoruceDict[tab]?.append(contentsOf: moviesResponse.results)
-                    DispatchQueue.main.async { [weak self] in
-                        self?.uiEventsPublisher.send(.reloadData)
-                    }
-                } else {
-                    print("Next Page is Empty")
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
 }
 
 //MARK: - Extenion for convience

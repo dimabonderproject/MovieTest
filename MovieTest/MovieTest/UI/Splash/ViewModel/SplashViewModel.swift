@@ -19,7 +19,7 @@ class SplashViewModel {
         self.movieService = movieService
     }
     
-    //MARK: - Methods
+    //MARK: - Public Methods
     func preFetchMoviesByCategories(completion: @escaping () -> Void) {
         let dispatchGroup = DispatchGroup()
         

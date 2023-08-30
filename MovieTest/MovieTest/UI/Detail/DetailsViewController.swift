@@ -40,13 +40,14 @@ class DetailsViewController: UIViewController {
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
+
     //MARK: - Private Methods
     private func setupUIForNavigationBar() {
         navigationItem.hidesBackButton = false
         navigationController?.navigationBar.isHidden = false
     }
-    
-    func setupUI() {
+
+    private func setupUI() {
         movieTitleLabel.text = viewModel.getMovieTitle()
         movieDescription.text = viewModel.getMovieOverview()
         movieReleaseDate.text = "Release date: \(viewModel.getMovieReleaseDate())"
