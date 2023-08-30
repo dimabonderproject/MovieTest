@@ -30,6 +30,7 @@ class MainViewModel {
     private(set) var selectedTab: SegementTab = .popular
     private(set) var favoriteMovies: [Movie] = []
     private(set) var dataSoruceDict: [SegementTab: [Movie]] = [:]
+    private(set) var currentPage: [SegementTab: Int] = [.popular: 1, .nowPlaying: 1, .favorites: 1]
     private(set) var uiEventsPublisher = PassthroughSubject<MainViewModelUIEvents,Never>()
     
     var currentMovies: [Movie] {
@@ -100,7 +101,26 @@ class MainViewModel {
     private func notifyMovieAlreadyExistsInFav() {
         uiEventsPublisher.send(.movieAddToFav(title: Constants.existInFavTitle))
     }
-
+    
+    func fetchNextPage(for tab: SegementTab, page: Int) {
+        movieService?.fetchNextPage(for: tab, page: page) { [weak self] result in
+            switch result {
+            case .success(let moviesResponse):
+                if !moviesResponse.results.isEmpty {
+                    self?.currentPage[tab] = page + 1
+                    self?.dataSoruceDict[tab]?.append(contentsOf: moviesResponse.results)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.uiEventsPublisher.send(.reloadData)
+                    }
+                } else {
+                    print("Next Page is Empty")
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
 }
 
 //MARK: - Extenion for convience

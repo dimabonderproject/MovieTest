@@ -19,13 +19,29 @@ class MovieService {
     
     /// Fetches a list of popular movies.
     /// - Parameter completion: A closure to be called when the fetch is complete. The closure takes a `Result` containing a `MovieResult` or a `NetworkError`.
-    func fetchPopularMovies(completion: @escaping (Result<MovieResult, NetworkError>) -> Void) {
-        networkingService.fetchData(for: .popularMovies, method: .get, completion: completion)
+    func fetchPopularMovies(page: Int , completion: @escaping (Result<MovieResult, NetworkError>) -> Void) {
+        networkingService.fetchData(for: .popularMovies, method: .get, page: page, completion: completion)
     }
     
     /// Fetches a list of now playing movies.
     /// - Parameter completion: A closure to be called when the fetch is complete. The closure takes a `Result` containing a `MovieResult` or a `NetworkError`.
-    func fetchNowPlayingMovies(completion: @escaping (Result<MovieResult, NetworkError>) -> Void) {
-        networkingService.fetchData(for: .nowPlaying, method: .get, completion: completion)
+    func fetchNowPlayingMovies(page: Int ,completion: @escaping (Result<MovieResult, NetworkError>) -> Void) {
+        networkingService.fetchData(for: .nowPlaying, method: .get, page: page, completion: completion)
+    }
+    
+    /// Fetches the next page of movies for a specific segment tab.
+    /// - Parameters:
+    ///   - tab: The segment tab for which to fetch the next page of movies.
+    ///   - page: The current page number of the movies to be fetched.
+    ///   - completion: A closure to be called when the fetch is complete. The closure takes a `Result` containing a `MovieResult` or a `NetworkError`.
+    func fetchNextPage(for tab: SegementTab, page: Int, completion: @escaping (Result<MovieResult, NetworkError>) -> Void) {
+        switch tab {
+        case .popular:
+            fetchPopularMovies(page: page + 1, completion: completion)
+        case .nowPlaying:
+            fetchNowPlayingMovies(page: page + 1, completion: completion)
+        default:
+            break
+        }
     }
 }

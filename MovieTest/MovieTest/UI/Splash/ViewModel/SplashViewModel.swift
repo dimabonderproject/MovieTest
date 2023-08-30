@@ -40,7 +40,7 @@ class SplashViewModel {
     
     //MARK: - Private Methods
     private func preFetchNowPlayingMovies(completion: @escaping () -> Void) {
-        movieService?.fetchNowPlayingMovies { [weak self] result in
+        movieService?.fetchNowPlayingMovies(page: 1) { [weak self] result in
             switch result {
             case .success(let moviesResponse):
                 self?.movies?.nowPlayingMovies = moviesResponse.results
@@ -52,7 +52,7 @@ class SplashViewModel {
     }
     
     private func preFetchPopularMovies(completion: @escaping () -> Void ) {
-        movieService?.fetchPopularMovies { [weak self] result in
+        movieService?.fetchPopularMovies(page: 1) { [weak self] result in
             switch result {
             case .success(let moviesResponse):
                 self?.movies?.popularMovies = moviesResponse.results

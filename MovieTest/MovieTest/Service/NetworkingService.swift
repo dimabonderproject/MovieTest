@@ -40,13 +40,21 @@ class NetworkingService {
         self.baseURL = baseURL
     }
     
-    private func makeRequest(endpoint: Endpoint, method: HTTPMethod, body: Data? = nil, headers: [String: String]? = nil) -> URLRequest? {
+    private func makeRequest(endpoint: Endpoint, method: HTTPMethod, page: Int? = nil, body: Data? = nil, headers: [String: String]? = nil) -> URLRequest? {
         
         guard let baseURL = URL(string: baseURL ?? "") else { return nil}
         
+        var queryItems: [URLQueryItem] = []
+
+        if let page = page {
+            queryItems.append(URLQueryItem(name: "page", value: String(page)))
+        }
+
         let urlType = baseURL.appendingPathComponent(endpoint.path)
         
         var components = URLComponents(url: urlType, resolvingAgainstBaseURL: true)
+        
+        components?.queryItems = queryItems
         
         guard let url = components?.url else {
             return nil
@@ -66,9 +74,9 @@ class NetworkingService {
         return request
     }
     
-    func fetchData<T: Codable>(for endpoint: Endpoint, method: HTTPMethod, body: Data? = nil, headers: [String: String]? = nil, completion: @escaping (Result<T, NetworkError>) -> Void) {
+    func fetchData<T: Codable>(for endpoint: Endpoint, method: HTTPMethod, page: Int? = nil,body: Data? = nil, headers: [String: String]? = nil, completion: @escaping (Result<T, NetworkError>) -> Void) {
         
-        guard let request = makeRequest(endpoint: endpoint, method: method, body: body, headers: headers) else {
+        guard let request = makeRequest(endpoint: endpoint, method: method, page: page, body: body, headers: headers) else {
             completion(.failure(.invalidURL))
             return
         }
