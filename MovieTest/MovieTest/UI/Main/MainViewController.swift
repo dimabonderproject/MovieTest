@@ -47,6 +47,8 @@ class MainViewController: UIViewController {
                     self?.showAlert(title: title)
                 case .navigateBackFromDetailScreen:
                     self?.navigationController?.popViewController(animated: true)
+                case .reloadData:
+                    self?.tableView.reloadData()
                 }
             }
             .store(in: &cancellables)
@@ -66,9 +68,7 @@ class MainViewController: UIViewController {
     //MARK: - IBActions
     @IBAction func segementedControllPressed(_ sender: UISegmentedControl) {
         guard let selectedTab = SegementTab(rawValue: sender.selectedSegmentIndex) else { return }
-        viewModel.didSelectTab(segment: selectedTab) { [weak self] in
-            self?.tableView.reloadData()
-        }
+        viewModel.didSelectTab(segment: selectedTab)
     }
     
     private func navigateToDetailsScreen(with selectedMovie: Movie) {

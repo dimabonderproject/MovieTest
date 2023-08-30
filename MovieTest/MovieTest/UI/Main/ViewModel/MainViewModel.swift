@@ -18,6 +18,7 @@ enum MainViewModelUIEvents {
     case navigateBackFromDetailScreen
     case movieAddToFav(title: String)
     case movieAlreadyExistInFav(title: String)
+    case reloadData
 }
 
 class MainViewModel {
@@ -48,10 +49,9 @@ class MainViewModel {
     /// Selects a specific tab and triggers a completion block.
        /// - Parameters:
        ///   - segment: The SegementTab to be selected.
-       ///   - completion: A completion block to be executed after the tab is selected.
-    func didSelectTab(segment: SegementTab, completion: @escaping () -> Void) {
+    func didSelectTab(segment: SegementTab) {
         selectedTab = segment
-        completion()
+        uiEventsPublisher.send(.reloadData)
     }
     
     /// Appends a movie to the favorite movies data source if it doesn't exist, otherwise notifies that the movie already exists.
