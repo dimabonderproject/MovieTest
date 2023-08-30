@@ -28,7 +28,7 @@ class AppCoordinator: Coordinator {
     
     //MARK: - Private
     private func setupNavigationAppearence() {
-        let backButtonImage = UIImage(systemName: "chevron.backward")?.withRenderingMode(.alwaysOriginal).withTintColor(.black)
+        let backButtonImage = UIImage(systemName: "chevron.backward")?.withRenderingMode(.alwaysOriginal).withTintColor(.white)
         navigationController.navigationBar.topItem?.title = ""
         navigationController.navigationBar.backIndicatorImage = backButtonImage
         navigationController.navigationBar.backIndicatorTransitionMaskImage = backButtonImage
@@ -36,5 +36,16 @@ class AppCoordinator: Coordinator {
     
     //MARK: - Public Methods
     func start() {
+        let movieService = MovieService(baseURL: Constants.baseURL)
+        let viewModel = SplashViewModel(movieService: movieService)
+        viewModel.coordinator = self
+        let viewController = SplashViewController(viewModel: viewModel)
+        navigationController.pushViewController(viewController, animated: true)
+    }
+    
+    func loadMainScreen(movieService: MovieService, movies: [Movie]) {
+        let viewModel = MainViewModel(movies: movies, movieService: movieService)
+        let viewController = MainViewController(viewModel: viewModel)
+        navigationController.pushViewController(viewController, animated: true)
     }
 }

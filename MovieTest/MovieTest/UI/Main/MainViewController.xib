@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Poppins-Bold.ttf">
+            <string>Poppins-Bold</string>
+        </array>
+        <array key="Poppins-Medium.ttf">
+            <string>Poppins-Medium</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainViewController" customModule="MovieTest" customModuleProvider="target">
+            <connections>
+                <outlet property="segmentedControl" destination="Psa-E6-IPa" id="Rdp-84-fJb"/>
+                <outlet property="tableView" destination="Ebs-ZQ-flv" id="cbr-0b-cWz"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Movies Cellcom!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vam-rC-1Ra">
+                    <rect key="frame" x="24" y="83" width="204.66666666666666" height="67.333333333333314"/>
+                    <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="24"/>
+                    <color key="textColor" name="SecondaryColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Here you can see all the movies around the world." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gFa-Fi-gpY">
+                    <rect key="frame" x="24" y="154.33333333333334" width="292" height="50.666666666666657"/>
+                    <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="18"/>
+                    <color key="textColor" name="SecondaryColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Psa-E6-IPa">
+                    <rect key="frame" x="24" y="221" width="345" height="45"/>
+                    <color key="backgroundColor" name="SecondaryColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="lbL-MK-D3o"/>
+                    </constraints>
+                    <segments>
+                        <segment title="Popular"/>
+                        <segment title="Top Rated"/>
+                        <segment title="Upcoming"/>
+                    </segments>
+                    <color key="tintColor" name="SecondaryColor"/>
+                    <color key="selectedSegmentTintColor" name="SecondaryColor"/>
+                    <connections>
+                        <action selector="segementedControllPressed:" destination="-1" eventType="valueChanged" id="UDH-6B-wTL"/>
+                    </connections>
+                </segmentedControl>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Ebs-ZQ-flv">
+                    <rect key="frame" x="24" y="281" width="345" height="571"/>
+                    <color key="backgroundColor" name="BGColor"/>
+                </tableView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="BGColor"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Vam-rC-1Ra" secondAttribute="trailing" constant="24" id="0dx-gw-imh"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="gFa-Fi-gpY" secondAttribute="trailing" constant="24" id="BaQ-dA-bwE"/>
+                <constraint firstItem="Vam-rC-1Ra" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="24" id="FnZ-5S-n77"/>
+                <constraint firstItem="gFa-Fi-gpY" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="KaP-Th-YAj"/>
+                <constraint firstItem="Ebs-ZQ-flv" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="NaM-F1-VPR"/>
+                <constraint firstItem="Psa-E6-IPa" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="OCD-F4-RvP"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Ebs-ZQ-flv" secondAttribute="trailing" constant="24" id="TkE-KO-Q0h"/>
+                <constraint firstItem="Psa-E6-IPa" firstAttribute="top" secondItem="gFa-Fi-gpY" secondAttribute="bottom" constant="16" id="c7i-J4-jMP"/>
+                <constraint firstAttribute="bottom" secondItem="Ebs-ZQ-flv" secondAttribute="bottom" id="o6P-m1-jEW"/>
+                <constraint firstItem="Vam-rC-1Ra" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="qUf-9z-1m7"/>
+                <constraint firstItem="Ebs-ZQ-flv" firstAttribute="top" secondItem="Psa-E6-IPa" secondAttribute="bottom" constant="16" id="vPR-Pt-klE"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Psa-E6-IPa" secondAttribute="trailing" constant="24" id="vXD-rz-Yoy"/>
+                <constraint firstItem="gFa-Fi-gpY" firstAttribute="top" secondItem="Vam-rC-1Ra" secondAttribute="bottom" constant="4" id="vuv-v8-ziZ"/>
+            </constraints>
+            <point key="canvasLocation" x="72" y="21"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="BGColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="SecondaryColor">
+            <color red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>
