@@ -39,11 +39,7 @@ class DetailsViewController: UIViewController {
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    
-    
-    //MARK: - Methods
-    
-    
+
     //MARK: - Private Methods
     private func setupUIForNavigationBar() {
         navigationItem.hidesBackButton = false
@@ -51,11 +47,13 @@ class DetailsViewController: UIViewController {
     }
     
     func setupUI() {
-        movieTitleLabel.text = viewModel.selectedMovie?.title ?? ""
-        movieDescription.text = viewModel.selectedMovie?.overview ?? ""
-        movieReleaseDate.text = "Release date: \(viewModel.selectedMovie?.releaseDate ?? "")"
-        let movieCompleteUrl = Constants.imageBaseURL + (viewModel.selectedMovie?.posterPath ?? "")
-        guard let requestDownloadURL = URL(string: movieCompleteUrl) else { return }
+        movieTitleLabel.text = viewModel.getMovieTitle()
+        movieDescription.text = viewModel.getMovieOverview()
+        movieReleaseDate.text = "Release date: \(viewModel.getMovieReleaseDate())"
+        
+        guard let requestDownloadURL = URL.createMovieImageURL(withImagePath: viewModel.getMovieImagePath()) else {
+            return
+        }
         movieImageView.kf.setImage(with: requestDownloadURL)
     }
     

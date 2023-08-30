@@ -28,16 +28,17 @@ class MovieTableViewCell: UITableViewCell {
     }
     
     ///Configure cell with title , release year , vote and image path.
-    func configureCell(title: String, releaseYear: String, averageVote: Double, imagePath: String) {
+    func configureCell(title: String, releaseDate: String, averageVote: Double, imagePath: String) {
         indicatorView.startAnimating()
         
         titleLabel.text = title
-        releaseDateLabel.text = releaseYear
+        releaseDateLabel.text = releaseDate
         averageVoteLabel.text = String((averageVote))
         
         //Download Image using imagePath and Kingfisher
-        let movieCompleteUrl = Constants.imageBaseURL + imagePath
-        guard let requestDownloadURL = URL(string: movieCompleteUrl) else { return }
+        guard let requestDownloadURL = URL.createMovieImageURL(withImagePath: imagePath) else {
+            return
+        }
         
         movieImageView.kf.setImage(with: requestDownloadURL) { [weak self] result in
              self?.indicatorView.stopAnimating()

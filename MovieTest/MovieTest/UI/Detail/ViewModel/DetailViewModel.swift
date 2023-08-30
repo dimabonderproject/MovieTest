@@ -17,4 +17,22 @@ class DetailViewModel {
     init(selectedMovie: Movie) {
         self.selectedMovie = selectedMovie
     }
+    
+    //MARK: - Methods
+    func getMovieImagePath() -> String {
+        return selectedMovie?.posterPath ?? ""
+    }
+    
+    func getMovieTitle() -> String {
+        return selectedMovie?.title ?? ""
+    }
+    
+    func getMovieOverview() -> String {
+        return selectedMovie?.overview ?? ""
+    }
+    
+    func getMovieReleaseDate() -> String {
+        return selectedMovie?.releaseDate ?? ""
+    }
+    
 }

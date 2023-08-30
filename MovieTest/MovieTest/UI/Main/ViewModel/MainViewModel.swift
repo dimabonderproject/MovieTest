@@ -71,6 +71,22 @@ class MainViewModel {
         uiEventsPublisher.send(.navigateBackFromDetailScreen)
     }
     
+    func getMovieTitle(indexPath: Int) -> String {
+        return currentMovies[indexPath].title ?? ""
+    }
+    
+    func getMovieImagePath(indexPath: Int) -> String {
+        return currentMovies[indexPath].posterPath ?? ""
+    }
+    
+    func getMovieReleaseDate(indexPath: Int) -> String {
+        return currentMovies[indexPath].releaseDate ?? ""
+    }
+    
+    func getMovieAvgVoteScore(indexPath: Int) -> Double {
+        return currentMovies[indexPath].voteAverage ?? 0.0
+    }
+    
     //MARK: - Private Methods
     private func setDataSource() {
         dataSoruceDict[.popular] = movies?.popularMovies ?? []
@@ -85,4 +101,11 @@ class MainViewModel {
         uiEventsPublisher.send(.movieAddToFav(title: Constants.existInFavTitle))
     }
 
+}
+
+//MARK: - Extenion for convience
+extension MainViewModel {
+    var moviesCount: Int {
+        return currentMovies.count
+    }
 }

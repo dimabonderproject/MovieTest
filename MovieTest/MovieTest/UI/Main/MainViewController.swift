@@ -88,18 +88,18 @@ class MainViewController: UIViewController {
 //MARK: - UITableViewDelegate , UITableViewDataSource
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.currentMovies.count
+        return viewModel.moviesCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.identifier) as? MovieTableViewCell else { return UITableViewCell() }
         
-        let title = viewModel.currentMovies[indexPath.row].title ?? ""
-        let imagePath = viewModel.currentMovies[indexPath.row].posterPath ?? ""
-        let releaseYear = viewModel.currentMovies[indexPath.row].releaseDate ?? ""
-        let averageVote = viewModel.currentMovies[indexPath.row].voteAverage ?? 0.0
+        let title = viewModel.getMovieTitle(indexPath: indexPath.row)
+        let imagePath = viewModel.getMovieImagePath(indexPath: indexPath.row)
+        let releaseDate = viewModel.getMovieReleaseDate(indexPath: indexPath.row)
+        let averageVote = viewModel.getMovieAvgVoteScore(indexPath: indexPath.row)
         
-        cell.configureCell(title: title, releaseYear: releaseYear, averageVote: averageVote, imagePath: imagePath)
+        cell.configureCell(title: title, releaseDate: releaseDate, averageVote: averageVote, imagePath: imagePath)
         return cell
     }
     
