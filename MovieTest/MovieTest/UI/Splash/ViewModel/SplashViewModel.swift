@@ -12,7 +12,7 @@ class SplashViewModel {
     //MARK: - Properties
     weak var coordinator: AppCoordinator?
     private let movieService: MovieService?
-    private var movies: [Movie] = []
+    private(set) var movies: MoviesCategory? = MoviesCategory()
     
     //MARK: - Init
     init(movieService: MovieService) {
@@ -20,22 +20,52 @@ class SplashViewModel {
     }
     
     //MARK: - Methods
+    func preFetchMoviesByCategories(completion: @escaping () -> Void) {
+        let dispatchGroup = DispatchGroup()
+        
+        dispatchGroup.enter()
+        preFetchPopularMovies {
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        preFetchNowPlayingMovies {
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) { [weak self] in
+           completion()
+        }
+    }
     
     //MARK: - Private Methods
-    func preFetchPopularMovies(completion: @escaping () -> Void ) {
-        movieService?.fetchPopularMovies(completion: { [weak self] result in
+    private func preFetchNowPlayingMovies(completion: @escaping () -> Void) {
+        movieService?.fetchNowPlayingMovies { [weak self] result in
             switch result {
             case .success(let moviesResponse):
-                self?.movies = moviesResponse.results
-                completion()
+                self?.movies?.nowPlayingMovies = moviesResponse.results
             case .failure(let error):
                 print(error.localizedDescription)
             }
-        })
+            completion()
+        }
+    }
+    
+    private func preFetchPopularMovies(completion: @escaping () -> Void ) {
+        movieService?.fetchPopularMovies { [weak self] result in
+            switch result {
+            case .success(let moviesResponse):
+                self?.movies?.popularMovies = moviesResponse.results
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+            completion()
+        }
     }
     
     func handleNavigationToMainApp() {
         guard let movieService = movieService else { return }
-        coordinator?.loadMainScreen(movieService: movieService, movies: movies)
+        guard let movieCategory = movies else { return }
+        coordinator?.loadMainScreen(movieService: movieService, movies: movieCategory)
     }
 }

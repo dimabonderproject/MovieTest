@@ -13,20 +13,16 @@ enum HTTPMethod: String {
 
 enum Endpoint {
     case popularMovies
+    case nowPlaying
     
     var path: String {
         switch self {
         case .popularMovies:
             return "/3/movie/popular"
+        case .nowPlaying:
+            return "/3/movie/now_playing"
         }
     }
-    
-//    var queryItems: [URLQueryItem]? {
-//        switch self {
-//        case .popularMovies:
-//            return [URLQueryItem(name: "", value: "")]
-//        }
-//    }
 }
 
 enum NetworkError: Error {
@@ -51,10 +47,6 @@ class NetworkingService {
         let urlType = baseURL.appendingPathComponent(endpoint.path)
         
         var components = URLComponents(url: urlType, resolvingAgainstBaseURL: true)
-        
-//        if let queryItems = endpoint.queryItems {
-//            components?.queryItems = queryItems
-//        }
         
         guard let url = components?.url else {
             return nil

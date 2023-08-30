@@ -8,6 +8,16 @@
 import Foundation
 
 class Constants {
+    
+    //MARK: - URL
     static let baseURL = "https://api.themoviedb.org"
     static let imageBaseURL = "https://image.tmdb.org/t/p/w500"
+    
+    //MARK: - MainScreen
+    static let addToFavTitle = "Boom! Consider that movie officially favorited!"
+    static let existInFavTitle = "Oh! The movie is already in your favorites. We're glad you like it!"
+    
+    //MARK: - Cell
+    static let movieTableViewCell = "MovieTableViewCell"
+
 }
