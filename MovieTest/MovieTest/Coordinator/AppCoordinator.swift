@@ -5,4 +5,36 @@
 //  Created by Dmitri Bondartchev on 30/08/2023.
 //
 
-import Foundation
+import UIKit
+
+protocol Coordinator {
+    var navigationController: UINavigationController { get set }
+    var childCoordinators: [Coordinator] { get set }
+}
+
+class AppCoordinator: Coordinator {
+    
+    // MARK: - Properties
+    var navigationController: UINavigationController
+    var childCoordinators: [Coordinator] = []
+    
+    // MARK: - Initializer
+    init(navController: UINavigationController) {
+        self.navigationController = navController
+        
+        setupNavigationAppearence()
+    }
+    
+    
+    //MARK: - Private
+    private func setupNavigationAppearence() {
+        let backButtonImage = UIImage(systemName: "chevron.backward")?.withRenderingMode(.alwaysOriginal).withTintColor(.black)
+        navigationController.navigationBar.topItem?.title = ""
+        navigationController.navigationBar.backIndicatorImage = backButtonImage
+        navigationController.navigationBar.backIndicatorTransitionMaskImage = backButtonImage
+    }
+    
+    //MARK: - Public Methods
+    func start() {
+    }
+}
