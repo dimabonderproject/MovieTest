@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import Combine
 
 class SplashViewController: UIViewController {
     
     //MARK: - Properties
     private var viewModel: SplashViewModel
+    private var cancellables: Set<AnyCancellable> = []
     
     //MARK: - IBOutlets
     @IBOutlet private weak var indicatorView: UIActivityIndicatorView!
@@ -19,6 +21,7 @@ class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initApp()
+        addObservers()
     }
     
     //MARK: - Initializer
@@ -41,7 +44,24 @@ class SplashViewController: UIViewController {
         }
     }
     
+    private func addObservers() {
+        viewModel.uiEventsPublisher
+            .sink { [weak self] event in
+                switch event {
+                case .showErrorAlert(title: let title, message: let message):
+                    self?.showAlert(title: title, message: message)
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
     private func navigateToMainApp() {
         viewModel.handleNavigationToMainApp()
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }

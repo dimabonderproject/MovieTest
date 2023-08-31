@@ -15,9 +15,11 @@ enum SegementTab: Int {
 }
 
 enum MainViewModelUIEvents {
+    case stopAnimate
     case navigateBackFromDetailScreen
     case movieAddToFav(title: String)
     case movieAlreadyExistInFav(title: String)
+    case showErrorAlert(title: String, message: String)
     case reloadData
 }
 
@@ -26,6 +28,7 @@ class MainViewModel {
     //MARK: - Properties
     weak var coordinator: AppCoordinator?
     private let movieService: MovieService?
+    private(set) var isFetchingNextPage = false
     private(set) var movies: MoviesCategory?
     private(set) var selectedTab: SegementTab = .popular
     private(set) var favoriteMovies: [Movie] = []
@@ -34,7 +37,7 @@ class MainViewModel {
     private(set) var totalPages: [SegementTab: Int] = [:]
     private(set) var uiEventsPublisher = PassthroughSubject<MainViewModelUIEvents,Never>()
     
-    var currentMovies: [Movie] {
+    var currentMovies: [Movie?] {
         dataSoruceDict[selectedTab] ?? []
     }
     
@@ -80,43 +83,62 @@ class MainViewModel {
     }
     
     func fetchNextPage(for tab: SegementTab, page: Int) {
+        guard !isFetchingNextPage,
+              let totalPages = totalPages[tab],
+              let currentPage = currentPage[tab],
+              currentPage < totalPages else {
+            return
+        }
+        
+        isFetchingNextPage = true
+
         movieService?.fetchNextPage(for: tab, page: page) { [weak self] result in
+            self?.isFetchingNextPage = false
             switch result {
             case .success(let moviesResponse):
                 if !moviesResponse.results.isEmpty {
-                    self?.totalPages[tab] = moviesResponse.totalPages 
+                    self?.totalPages[tab] = moviesResponse.totalPages
                     self?.currentPage[tab] = page + 1
                     self?.dataSoruceDict[tab]?.append(contentsOf: moviesResponse.results)
                     DispatchQueue.main.async { [weak self] in
                         self?.uiEventsPublisher.send(.reloadData)
+                        self?.uiEventsPublisher.send(.stopAnimate)
                     }
                 } else {
                     print("Next Page is Empty")
+                    DispatchQueue.main.async {
+                        self?.uiEventsPublisher.send(.stopAnimate)
+                    }
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                print("Self logged error: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self?.uiEventsPublisher.send(.stopAnimate)
+                    self?.uiEventsPublisher.send(.showErrorAlert(title: Constants.errorTitle, message: Constants.errorMessage))
+                }
             }
         }
     }
-    
+
+
     func notifyNavigationBackToMainScreen() {
         uiEventsPublisher.send(.navigateBackFromDetailScreen)
     }
     
     func getMovieTitle(indexPath: Int) -> String {
-        return currentMovies[indexPath].title ?? ""
+        return currentMovies[indexPath]?.title ?? ""
     }
     
     func getMovieImagePath(indexPath: Int) -> String {
-        return currentMovies[indexPath].posterPath ?? ""
+        return currentMovies[indexPath]?.posterPath ?? ""
     }
     
     func getMovieReleaseDate(indexPath: Int) -> String {
-        return currentMovies[indexPath].releaseDate ?? ""
+        return currentMovies[indexPath]?.releaseDate ?? ""
     }
     
     func getMovieAvgVoteScore(indexPath: Int) -> Double {
-        return currentMovies[indexPath].voteAverage ?? 0.0
+        return currentMovies[indexPath]?.voteAverage ?? 0.0
     }
     
     //MARK: - Private Methods

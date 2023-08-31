@@ -15,6 +15,8 @@ class Constants {
     
     //MARK: - MainScreen
     static let addToFavTitle = "Boom! Consider that movie officially favorited!"
+    static let errorMessage = "An error occurred. Please try again later."
+    static let errorTitle = "Ops, Something went wrong..."
     static let existInFavTitle = "Oh! The movie is already in your favorites. We're glad you like it!"
     
     //MARK: - Cell

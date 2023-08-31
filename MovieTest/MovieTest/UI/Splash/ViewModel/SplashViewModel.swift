@@ -6,6 +6,11 @@
 //
 
 import Foundation
+import Combine
+
+enum SplashViewModelUIEvents {
+    case showErrorAlert(title: String, message: String)
+}
 
 class SplashViewModel {
     
@@ -14,6 +19,7 @@ class SplashViewModel {
     private let movieService: MovieService?
     private(set) var totalPages: [SegementTab: Int] = [:]
     private(set) var movies: MoviesCategory? = MoviesCategory()
+    private(set) var uiEventsPublisher = PassthroughSubject<SplashViewModelUIEvents,Never>()
     
     //MARK: - Init
     init(movieService: MovieService) {
@@ -47,7 +53,10 @@ class SplashViewModel {
                 self?.totalPages[.nowPlaying] = moviesResponse.totalPages
                 self?.movies?.nowPlayingMovies = moviesResponse.results
             case .failure(let error):
-                print(error.localizedDescription)
+                print("Self logged error: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self?.uiEventsPublisher.send(.showErrorAlert(title: Constants.errorTitle, message: Constants.errorMessage))
+                }
             }
             completion()
         }
@@ -60,7 +69,10 @@ class SplashViewModel {
                 self?.totalPages[.popular] = moviesResponse.totalPages
                 self?.movies?.popularMovies = moviesResponse.results
             case .failure(let error):
-                print(error.localizedDescription)
+                print("Self logged error: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self?.uiEventsPublisher.send(.showErrorAlert(title: Constants.errorTitle, message: Constants.errorMessage))
+                }
             }
             completion()
         }
