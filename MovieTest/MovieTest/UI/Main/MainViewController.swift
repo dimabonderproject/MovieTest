@@ -98,8 +98,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let imagePath = viewModel.getMovieImagePath(indexPath: indexPath.row)
         let releaseDate = viewModel.getMovieReleaseDate(indexPath: indexPath.row)
         let averageVote = viewModel.getMovieAvgVoteScore(indexPath: indexPath.row)
+        let isFav = viewModel.currentMovies[indexPath.row].isFav
         
-        cell.configureCell(title: title, releaseDate: releaseDate, averageVote: averageVote, imagePath: imagePath)
+        cell.configureCell(title: title, releaseDate: releaseDate, averageVote: averageVote, imagePath: imagePath, isFav: isFav)
+        
         return cell
     }
     
@@ -109,20 +111,20 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-         // Detect if the user is close to the end of the table view
-         let isNearEndOfList = indexPath.row == viewModel.moviesCount - 5
-         
+        let isNearEndOfList = indexPath.row == viewModel.moviesCount - 5
+        
         if isNearEndOfList, let selectedTab = SegementTab(rawValue: segmentedControl.selectedSegmentIndex) {
-            // Determine if the selected tab supports pagination
             if selectedTab == .popular || selectedTab == .nowPlaying {
-                // Retrieve the current page for the selected tab
-                if let currentPage = viewModel.currentPage[selectedTab] {
-                    // Fetch the next page of data for the selected tab
-                    viewModel.fetchNextPage(for: selectedTab, page: currentPage)
+                if let currentPage = viewModel.currentPage[selectedTab],
+                   let totalPages = viewModel.totalPages[selectedTab] {
+                    // Check if the current page is less than the total pages
+                    if currentPage < totalPages {
+                        viewModel.fetchNextPage(for: selectedTab, page: currentPage)
+                    }
                 }
             }
         }
-     }
+    }
 }
 
 //MARK: - DetailsViewControllerDelegate

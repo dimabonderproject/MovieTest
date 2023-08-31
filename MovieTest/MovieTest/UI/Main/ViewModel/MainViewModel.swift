@@ -31,6 +31,7 @@ class MainViewModel {
     private(set) var favoriteMovies: [Movie] = []
     private(set) var dataSoruceDict: [SegementTab: [Movie]] = [:]
     private(set) var currentPage: [SegementTab: Int] = [.popular: 1, .nowPlaying: 1, .favorites: 1]
+    private(set) var totalPages: [SegementTab: Int] = [:]
     private(set) var uiEventsPublisher = PassthroughSubject<MainViewModelUIEvents,Never>()
     
     var currentMovies: [Movie] {
@@ -38,24 +39,25 @@ class MainViewModel {
     }
     
     //MARK: - Init
-    init(movies: MoviesCategory, movieService: MovieService) {
+    init(movies: MoviesCategory, movieService: MovieService,totalPages: [SegementTab: Int]) {
         self.movies = movies
         self.movieService = movieService
+        self.totalPages = totalPages
         
         setDataSource()
     }
     
     //MARK: - Public Methods
     /// Selects a specific tab and triggers a completion block.
-       /// - Parameters:
-       ///   - segment: The SegementTab to be selected.
+    /// - Parameters:
+    ///   - segment: The SegementTab to be selected.
     func didSelectTab(segment: SegementTab) {
         selectedTab = segment
         uiEventsPublisher.send(.reloadData)
     }
     
     /// Appends a movie to the favorite movies data source if it doesn't exist, otherwise notifies that the movie already exists.
-       /// - Parameter selectedMovie: The selected movie to be added to favorites.
+    /// - Parameter selectedMovie: The selected movie to be added to favorites.
     func appendFavoriteMovieToDataSource(selectedMovie: Movie) {
         if !favoriteMovies.contains(where: { $0.title == selectedMovie.title }) {
             favoriteMovies.append(selectedMovie)
@@ -65,6 +67,16 @@ class MainViewModel {
             notifyMovieAlreadyExistsInFav()
             dataSoruceDict[.favorites] = favoriteMovies
         }
+        
+        if let index = dataSoruceDict[.popular]?.firstIndex(where: { $0.title == selectedMovie.title }) {
+            dataSoruceDict[.popular]?[index].isFav = true
+            uiEventsPublisher.send(.reloadData) // Reload the table view
+        }
+        
+        if let index = dataSoruceDict[.nowPlaying]?.firstIndex(where: { $0.title == selectedMovie.title }) {
+            dataSoruceDict[.nowPlaying]?[index].isFav = true
+            uiEventsPublisher.send(.reloadData) // Reload the table view
+        }
     }
     
     func fetchNextPage(for tab: SegementTab, page: Int) {
@@ -72,6 +84,7 @@ class MainViewModel {
             switch result {
             case .success(let moviesResponse):
                 if !moviesResponse.results.isEmpty {
+                    self?.totalPages[tab] = moviesResponse.totalPages 
                     self?.currentPage[tab] = page + 1
                     self?.dataSoruceDict[tab]?.append(contentsOf: moviesResponse.results)
                     DispatchQueue.main.async { [weak self] in
@@ -85,7 +98,7 @@ class MainViewModel {
             }
         }
     }
-
+    
     func notifyNavigationBackToMainScreen() {
         uiEventsPublisher.send(.navigateBackFromDetailScreen)
     }

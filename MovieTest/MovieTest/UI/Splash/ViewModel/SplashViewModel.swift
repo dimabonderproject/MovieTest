@@ -12,6 +12,7 @@ class SplashViewModel {
     //MARK: - Properties
     weak var coordinator: AppCoordinator?
     private let movieService: MovieService?
+    private(set) var totalPages: [SegementTab: Int] = [:]
     private(set) var movies: MoviesCategory? = MoviesCategory()
     
     //MARK: - Init
@@ -43,6 +44,7 @@ class SplashViewModel {
         movieService?.fetchNowPlayingMovies(page: 1) { [weak self] result in
             switch result {
             case .success(let moviesResponse):
+                self?.totalPages[.nowPlaying] = moviesResponse.totalPages
                 self?.movies?.nowPlayingMovies = moviesResponse.results
             case .failure(let error):
                 print(error.localizedDescription)
@@ -55,6 +57,7 @@ class SplashViewModel {
         movieService?.fetchPopularMovies(page: 1) { [weak self] result in
             switch result {
             case .success(let moviesResponse):
+                self?.totalPages[.popular] = moviesResponse.totalPages
                 self?.movies?.popularMovies = moviesResponse.results
             case .failure(let error):
                 print(error.localizedDescription)
@@ -66,6 +69,6 @@ class SplashViewModel {
     func handleNavigationToMainApp() {
         guard let movieService = movieService else { return }
         guard let movieCategory = movies else { return }
-        coordinator?.loadMainScreen(movieService: movieService, movies: movieCategory)
+        coordinator?.loadMainScreen(movieService: movieService, movies: movieCategory, totalPages: totalPages)
     }
 }

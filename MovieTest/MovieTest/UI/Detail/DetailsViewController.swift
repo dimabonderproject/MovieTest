@@ -21,8 +21,8 @@ class DetailsViewController: UIViewController {
     //MARK: - IBOutlets
     @IBOutlet private weak var addToFavButton: UIButton!
     @IBOutlet private weak var movieTitleLabel: UILabel!
-    @IBOutlet private weak var movieDescription: UILabel!
-    @IBOutlet private weak var movieReleaseDate: UILabel!
+    @IBOutlet private weak var movieDescriptionLabel: UILabel!
+    @IBOutlet private weak var movieReleaseDateLabel: UILabel!
     @IBOutlet private weak var movieImageView: UIImageView!
     
     //MARK: - Lifecycle
@@ -49,8 +49,8 @@ class DetailsViewController: UIViewController {
 
     private func setupUI() {
         movieTitleLabel.text = viewModel.getMovieTitle()
-        movieDescription.text = viewModel.getMovieOverview()
-        movieReleaseDate.text = "Release date: \(viewModel.getMovieReleaseDate())"
+        movieDescriptionLabel.text = viewModel.getMovieOverview()
+        movieReleaseDateLabel.text = "Release date: \(viewModel.getMovieReleaseDate())"
         
         guard let requestDownloadURL = URL.createMovieImageURL(withImagePath: viewModel.getMovieImagePath()) else {
             return
@@ -60,7 +60,8 @@ class DetailsViewController: UIViewController {
     
     //MARK: - IBActions
     @IBAction func addMovieButtonPressed(_ sender: UIButton) {
-        guard let selectedMovie = viewModel.selectedMovie else { return }
+        guard var selectedMovie = viewModel.selectedMovie else { return }
+        selectedMovie.isFav = true
         delegate?.didAddMovieToFavorites(selectedMovie: selectedMovie)
     }
 }

@@ -43,8 +43,8 @@ class AppCoordinator: Coordinator {
         navigationController.pushViewController(viewController, animated: true)
     }
     
-    func loadMainScreen(movieService: MovieService, movies: MoviesCategory) {
-        let viewModel = MainViewModel(movies: movies, movieService: movieService)
+    func loadMainScreen(movieService: MovieService, movies: MoviesCategory,totalPages: [SegementTab: Int]) {
+        let viewModel = MainViewModel(movies: movies, movieService: movieService, totalPages: totalPages)
         viewModel.coordinator = self
         let viewController = MainViewController(viewModel: viewModel)
         navigationController.pushViewController(viewController, animated: true)

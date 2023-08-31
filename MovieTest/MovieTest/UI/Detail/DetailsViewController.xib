@@ -19,9 +19,9 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DetailsViewController" customModule="MovieTest" customModuleProvider="target">
             <connections>
                 <outlet property="addToFavButton" destination="JT5-KA-B7A" id="dbB-si-SGB"/>
-                <outlet property="movieDescription" destination="J64-aw-tlV" id="NTK-DD-YmJ"/>
+                <outlet property="movieDescriptionLabel" destination="J64-aw-tlV" id="NTK-DD-YmJ"/>
                 <outlet property="movieImageView" destination="6Dh-q9-xZX" id="rWz-os-Fmg"/>
-                <outlet property="movieReleaseDate" destination="y7u-ft-rSY" id="E4S-a8-D5A"/>
+                <outlet property="movieReleaseDateLabel" destination="y7u-ft-rSY" id="E4S-a8-D5A"/>
                 <outlet property="movieTitleLabel" destination="Hxh-A6-dlE" id="hRa-E5-1ji"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
